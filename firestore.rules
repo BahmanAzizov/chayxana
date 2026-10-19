@@ -1,0 +1,10 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Hər oyunçu yalnız öz yaddaşını oxuyub yaza bilir
+    match /players/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid
+                         && (request.resource == null || request.resource.data.save.size() < 500000);
+    }
+  }
+}

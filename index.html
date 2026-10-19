@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Çayxana</title>
+<meta name="theme-color" content="#8a3a20">
+<meta name="description" content="Çay payla, çayxananı böyüt, şəhəri qur.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Çayxana">
+<script src="version.js"></script>
+<script src="vendor/firebase/firebase-app-compat.js"></script>
+<script src="vendor/firebase/firebase-auth-compat.js"></script>
+<script src="vendor/firebase/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="game"></div>
+<div id="labels"></div>
+<div id="hud">
+  <div id="money" class="pill"><span class="coin"></span><span id="moneyv">0</span></div>
+  <div id="lvl" class="pill" role="button" tabindex="0" aria-label="Profil"><span id="hudAv" class="av"></span><span class="lvtxt"><b id="hudName">Oyunçu</b><span class="lvrow">Səv. <b id="lvlv">1</b><span class="xpbar"><i id="xpfill"></i></span></span></span></div>
+  <div id="crowd" class="pill" aria-label="Buradakı müştərilər"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="7" r="3.2"/><path d="M2.5 19c0-3.6 2.9-6.2 6.5-6.2s6.5 2.6 6.5 6.2z"/><circle cx="17" cy="8" r="2.6"/><path d="M15.2 13.1c3.4-.6 6.3 1.9 6.3 5.9h-4.4c0-2.3-.7-4.3-1.9-5.9z"/></svg><span><span id="crowdName">Çayxana</span> <b id="crowdv">0</b>/<span id="seatv">0</span></span><span id="waitv"></span></div>
+  <button id="misBtn" class="pill" aria-label="Tapşırıqlar"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4.5h6M8.5 10l1.6 1.6 3-3M8.5 16h7"/></svg><span>Tapşırıqlar</span><b id="misBadge" class="badge">0</b></button>
+  <div id="fps"></div>
+  <div id="boost">x2 gəlir · <span id="boostv">60</span> s</div>
+  <div id="right" class="pill"><span id="clock">0:00</span><button class="btn" id="mute" aria-label="Səs">🔊</button><button class="btn" id="info" aria-label="Statistika">ⓘ</button></div>
+  <div id="zoom"><button class="zb" id="zin" aria-label="Yaxınlaşdır">+</button><button class="zb" id="zout" aria-label="Uzaqlaşdır">−</button><button class="zb" id="zme" aria-label="Kameranı oyunçuya qaytar"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="1.8" fill="currentColor" stroke="none"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"/></svg></button></div>
+  <div id="banner"></div>
+  <button id="offer">x2 gəlir 60 s — reklama bax (test)</button>
+  <div id="resv" class="resv" role="status"><div id="resvText"></div><div class="row" id="resvBtns"><button class="buy quiet" id="resvNo">İmtina</button><button class="buy" id="resvYes">Razılaş</button></div></div>
+  <div id="panel"><h2 id="panelTitle">Təkmilləşdirmə</h2><div id="ups"></div></div>
+  <div id="joy"><div id="knob"></div></div>
+</div>
+<div id="profile" class="modal" role="dialog" aria-modal="true" aria-label="Profil"><div class="card pfCard">
+  <div class="pfTop"><div class="pfAvWrap"><div id="pfAv" class="av big"></div><button id="pfAvEdit" class="pfEdit" aria-label="Avatarı dəyiş">✎</button></div>
+    <div class="pfId"><input id="pfName" maxlength="16" autocomplete="nickname" aria-label="Ad"><div class="pfLvl">Səviyyə <b id="pfLvl">1</b></div><div class="xpbar pfXp"><i id="pfXpFill"></i></div><div id="pfXpTxt" class="pfXpTxt"></div></div></div>
+  <div id="pfAvGrid" class="pfAvGrid" hidden></div>
+  <div id="pfGoogle" class="pfGoogle"></div>
+  <div id="pfStats" class="pfStats"></div>
+  <div class="row"><button class="buy" id="pfClose">Bağla</button></div></div></div>
+<div id="stats"><div class="card"><h2>Statistika</h2><p class="ver">Versiya <b class="appVer"></b> <button class="buy quiet" id="installBtn" hidden>Telefona quraşdır</button></p><table id="stattable"></table><div class="row"><button class="buy quiet" id="close">Bağla</button><button class="buy quiet" id="sndBtn">Səs ayarları</button></div></div></div>
+<div id="mis" class="modal"><div class="card"><h2>Tapşırıqlar</h2><div id="misList"></div><div class="row"><button class="buy quiet" id="misClose">Bağla</button></div></div></div>
+<div id="buy" class="modal"><div class="card"><h2 id="buyTitle"></h2><p id="buyInfo" class="binfo"></p><div class="row"><button class="buy quiet" id="buyNo">Ləğv et</button><button class="buy" id="buyYes">Al</button></div></div></div>
+<div id="snd" class="modal"><div class="card"><h2>Səs ayarları</h2><p class="ainfo">Hər hadisə üçün səsi özün seç, ▶ ilə dinlə.</p><div id="sndBody"></div><div class="row"><button class="buy quiet" id="sndClose">Bağla</button></div></div></div>
+
+<div id="adov"><div>Reklam (test)</div><span id="adcount">3</span></div>
+<div id="start"><div class="card"><h1>Çayxana</h1><p>Piştaxtadan çayı götür, masalara payla, kassadan pulu yığ və yeni şeylər aç. Getmək istədiyin yerə toxun, barmağı sürüşdürüb ətrafa bax, iki barmaqla yaxınlaşdır.</p><label class="namef" for="pname">Adın</label><input id="pname" maxlength="16" autocomplete="nickname" placeholder="Bahman"><button class="buy" id="play">Oyna</button><button class="buy gbtn small" id="startSignIn" hidden><span class="g">G</span> Google ilə daxil ol</button><p class="cloudStatus" id="startCloud"></p><p class="ver">v<span class="appVer"></span></p></div></div>
+<div id="upd" role="status" hidden><span>Yeni versiya hazırdır (<b id="updVer"></b>)</span><button id="updBtn">Yenilə</button></div>
+<div id="cloudChoice" class="cchoice" hidden><div class="card"><h2>Hansı irəliləyiş qalsın?</h2><p>Bu Google hesabında başqa bir irəliləyiş tapıldı.</p><p id="ccCloud" class="ccrow"></p><p id="ccLocal" class="ccrow"></p><div class="row"><button class="buy quiet" id="ccUseLocal">Bu cihazdakını saxla</button><button class="buy" id="ccUseCloud">Buluddakını yüklə</button></div></div></div>
+<script src="vendor/three.min.js"></script>
+<script src="js/game.js"></script>
+<script src="js/cloud.js"></script>
+<script src="js/pwa.js"></script>
+</body>
+</html>

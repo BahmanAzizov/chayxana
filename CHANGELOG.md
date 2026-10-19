@@ -2,6 +2,10 @@
 
 Versiya `version.js` faylındadır. Hər yeni buraxılışda oranı artır və buraya bir sətir yaz.
 
+## 1.2.2
+- Telefonda profil kartına toxunanda profil açılmırdı, düzəldildi.
+- Firebase qurulmayanda profildə oyunçuya aydın yazı göstərilir.
+
 ## 1.2.1
 - Oyunçular üçün admin panel və "Sıfırla" çıxarıldı.
 

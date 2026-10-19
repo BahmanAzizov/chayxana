@@ -2,6 +2,16 @@
 
 Versiya `version.js` faylındadır. Hər yeni buraxılışda oranı artır və buraya bir sətir yaz.
 
+## 1.4.0
+- Bulud sinxronizasiyası artıq vaxta görə yox, irəliləyişin həcminə görə qərar verir: az irəliləyiş heç vaxt avtomatik olaraq çox irəliləyişin üstünə yazılmır.
+- Yeni cihazda Google ilə girəndə buluddakı irəliləyiş avtomatik yüklənir.
+- Ehtiyat nüsxələr: üstündən yazılan irəliləyiş həm cihazda, həm buludda (`players/{uid}/history`) saxlanır, profildən bərpa olunur.
+- Firestore qaydalarına `history` əlavə olundu.
+
+## 1.3.1
+- "Hansı irəliləyiş qalsın?" pəncərəsi hansı tərəfdə daha çox irəliləyiş olduğunu ⭐ ilə göstərir, oyun vaxtını da yazır.
+- Firestore qaydaları sadələşdirildi (oxuma və yazma ayrıca).
+
 ## 1.3.0
 - Oyunçular: Google ilə girənlər səviyyəyə görə sıralanmış siyahını və hər oyunçunun profilini görür.
 - Firestore-a açıq profil (`profiles`) əlavə olundu, qaydalar yeniləndi.

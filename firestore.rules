@@ -4,8 +4,14 @@ service cloud.firestore {
 
     // Oyunçunun bütün irəliləyişi: yalnız özü oxuyub yaza bilir
     match /players/{uid} {
-      allow read, write: if request.auth != null && request.auth.uid == uid
-                         && (request.resource == null || request.resource.data.save.size() < 500000);
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+                            && request.resource.data.save.size() < 500000;
+
+      // Üstündən yazılan köhnə irəliləyişlər (ehtiyat nüsxələr)
+      match /history/{hid} {
+        allow read, create: if request.auth != null && request.auth.uid == uid;
+      }
     }
 
     // Açıq profil: Google ilə girən hər kəs görə bilir, yalnız sahibi dəyişə bilir

@@ -73,6 +73,7 @@ Oyunçular oyunu açanda **"Yeni versiya hazırdır — Yenilə"** yazısını g
 
 `firebase-config.js`-dəki açarlar gizli deyil, repoda açıq durması normaldır. Məlumatı `firestore.rules` qoruyur:
 - `players/{uid}`: oyunçunun bütün irəliləyişi. Yalnız özü oxuyub yaza bilir.
+- `players/{uid}/history`: üstündən yazılan köhnə irəliləyişlər (ehtiyat nüsxələr). Yalnız sahibi görür.
 - `profiles/{uid}`: açıq profil (ad, avatar, səviyyə, statistika; e-poçt yox). Google ilə girən hər kəs görə bilir, yalnız sahibi dəyişə bilir. **Oyunçular** siyahısı buradan gəlir.
 
 `firestore.rules` dəyişəndə onu Firebase Console → Firestore → Rules bölməsinə yenidən yapışdırıb **Publish** etmək lazımdır.

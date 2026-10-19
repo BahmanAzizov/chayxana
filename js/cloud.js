@@ -19,6 +19,15 @@
   C.available = true;
   var dirty = false, lastPush = 0, busy = false, baseSavedAt = 0;
   function ref() { return db.collection(COLL).doc(C.user.uid); }
+  function pubRef() { return db.collection('profiles').doc(C.user.uid); }
+  // başqalarına görünən hissə: ad, avatar, səviyyə və statistika (e-poçt və irəliləyişin özü yox)
+  function publicData(d) {
+    var st = d.st || {}, biz = d.biz || {}, own = 0; for (var k in biz) if (biz[k] && biz[k].own) own++;
+    var lv = d.level | 0, xp = Math.floor(d.xp || 0), av = d.avatar === undefined ? 0 : d.avatar;
+    return { name: String(d.name || 'Oyunçu').slice(0, 16), avatar: av, photo: (av === 'google' && C.user.photoURL) ? C.user.photoURL : null,
+      level: lv, xp: xp, score: lv * 100000 + xp, money: Math.floor(d.money || 0), served: d.served | 0, tea: st.tea | 0,
+      biz: own, unlocked: d.unlocked | 0, toys: st.toys | 0, version: window.APP_VERSION || '', updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+  }
 
   C.signIn = function () {
     var p = new firebase.auth.GoogleAuthProvider(); p.setCustomParameters({ prompt: 'select_account' });
@@ -41,7 +50,7 @@
         if (c && (c.savedAt || 0) > baseSavedAt + 1000 && (c.savedAt || 0) > data.savedAt) { var err = new Error('conflict'); err.cloud = c; throw err; }
         tx.set(ref(), data);
       });
-    }).then(function () { baseSavedAt = data.savedAt; lastPush = Date.now(); dirty = false; status('Buluda yazıldı · ' + hm(lastPush)); })
+    }).then(function () { baseSavedAt = data.savedAt; lastPush = Date.now(); dirty = false; status('Buluda yazıldı · ' + hm(lastPush)); return pubRef().set(publicData(d)).catch(function () {}); })
       .catch(function (e) { if (e && e.cloud) choose(e.cloud, local()); else status('Buluda yazmaq alınmadı (' + (e.code || e.message) + ')'); })
       .finally(function () { busy = false; });
   };
@@ -57,6 +66,8 @@
     $('ccUseLocal').onclick = function () { box.hidden = true; baseSavedAt = cloud.savedAt || 0; C.push(); };
   }
 
+  C.leaderboard = function (n) { return db.collection('profiles').orderBy('score', 'desc').limit(n || 50).get().then(function (s) { return s.docs.map(function (x) { var o = x.data(); o.uid = x.id; return o; }); }); };
+  C.profile = function (uid) { return db.collection('profiles').doc(uid).get().then(function (s) { if (!s.exists) return null; var o = s.data(); o.uid = s.id; return o; }); };
   C.pull = function () { if (!C.user) return; ref().get().then(function (s) { if (s.exists) choose(s.data(), local()); else status('Buludda hələ yaddaş yoxdur'); }); };
   C.signOut = function () { (dirty ? C.push() : Promise.resolve()).then(function () { return auth.signOut(); }); };
 

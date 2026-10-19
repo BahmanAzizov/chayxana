@@ -2325,6 +2325,7 @@ function renderProfile(){ if($('profile').style.display!=='flex') return; var u=
   var own=BIZ.filter(function(b){ return bizState(b.id).own; }).length, st=S.st||{};
   var rows=[['☕','Paylanan çay',st.tea||0],['🙂','Xidmət olunan müştəri',S.served||0],['₼','Ümumi yığılan pul',Math.floor(st.coins||0)+' ₼'],['🏪','Bizneslər',own+' / '+BIZ.length],['🔓','Çayxana açılışları',S.unlocked+' / '+CFG.unlocks.length],['💍','Keçirilən toylar',st.toys||0],['⏱','Oyun vaxtı',fmtDur(S.elapsed)]];
   $('pfStats').innerHTML=rows.map(function(r){ return '<div class="pfStat"><span class="pfIc">'+r[0]+'</span><span class="pfLb">'+r[1]+'</span><b>'+r[2]+'</b></div>'; }).join('');
+  $('pfPlayers').hidden=!C;
   var g=$('pfGoogle');
   if(!C){ g.innerHTML='<div class="pfgHead"><span class="gmark">G</span> Google hesabı</div><p class="pfNote">Google ilə giriş və bulud yaddaş telefona quraşdırılan tətbiq versiyasında işləyir. Burada irəliləyiş bu brauzerdə saxlanır.</p>'; }
   else if(!C.available){ g.innerHTML='<div class="pfgHead"><span class="gmark">G</span> Google hesabı</div><p class="pfNote">'+(C.status||'Bulud yaddaş qurulmayıb')+'</p>'; }
@@ -2339,6 +2340,26 @@ $('lvl').addEventListener('click', openProfile); $('lvl').addEventListener('keyd
 $('pfClose').addEventListener('click', function(){ closeModal('profile'); });
 $('pfAvEdit').addEventListener('click', function(){ var g=$('pfAvGrid'); g.hidden=!g.hidden; });
 $('pfName').addEventListener('change', function(){ setName(this.value); this.value=S.name; save(); });
+// ---------- see other players: ranking and public profiles (needs Google sign-in) ----------
+var plCache=null;
+function avatarFor(p){ if(p.avatar==='google' && p.photo) return '<img src="'+escapeHTML(p.photo)+'" alt="" referrerpolicy="no-referrer">'; var a=AVATARS[(p.avatar|0)%AVATARS.length]; return '<span class="avE" style="background:'+a[1]+'">'+a[0]+'</span>'; }
+function whenAgo(ts){ var ms=ts && ts.toMillis ? ts.toMillis() : (ts&&ts.seconds? ts.seconds*1000 : 0); if(!ms) return ''; var m=Math.floor((Date.now()-ms)/60000); if(m<2) return 'indi oyunda'; if(m<60) return m+' dəq əvvəl'; var h=Math.floor(m/60); if(h<24) return h+' saat əvvəl'; return Math.floor(h/24)+' gün əvvəl'; }
+function openPlayers(){ var C=window.CLOUD, b=$('plBody'); closeModal('profile'); openModal('players');
+  if(!C || !C.available){ b.innerHTML='<p class="pfNote">Başqa oyunçular Google girişi aktiv olanda görünür.</p>'; return; }
+  if(!C.user){ b.innerHTML='<p class="pfNote">Başqa oyunçuları görmək üçün profildə <b>Google ilə bağla</b>.</p><button class="buy gbtn" id="plSign"><span class="g">G</span> Google ilə bağla</button>'; $('plSign').onclick=function(){ C.signIn(); }; return; }
+  b.innerHTML='<p class="pfNote">Yüklənir…</p>'; save();
+  Promise.resolve(C.push()).then(function(){ return C.leaderboard(50); }).then(function(list){ plCache=list; renderPlayerList(); })
+    .catch(function(e){ b.innerHTML='<p class="pfNote">Siyahı yüklənmədi ('+escapeHTML(e.code||e.message||'xəta')+'). Firestore qaydalarını yenilədiyini yoxla.</p>'; }); }
+function renderPlayerList(){ var b=$('plBody'), me=window.CLOUD && window.CLOUD.user ? window.CLOUD.user.uid : null; if(!plCache || !plCache.length){ b.innerHTML='<p class="pfNote">Hələ heç kim yoxdur. İlk sən ol!</p>'; return; }
+  b.innerHTML='<div class="plList">'+plCache.map(function(p,i){ var medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1);
+    return '<button class="plRow'+(p.uid===me?' me':'')+'" data-i="'+i+'"><span class="plRank">'+medal+'</span><span class="av">'+avatarFor(p)+'</span><span class="plName"><b>'+escapeHTML(p.name||'Oyunçu')+(p.uid===me?' <em>(sən)</em>':'')+'</b><small>'+(p.served|0)+' müştəri · '+(p.biz|0)+' biznes</small></span><span class="plLv">Səv. <b>'+(p.level|0)+'</b></span></button>'; }).join('')+'</div>';
+  b.querySelectorAll('.plRow').forEach(function(r){ r.onclick=function(){ showPlayer(plCache[+r.getAttribute('data-i')], +r.getAttribute('data-i')); }; }); }
+function showPlayer(p,i){ var b=$('plBody'), need=xpNeed(p.level|1);
+  var rows=[['☕','Paylanan çay',p.tea|0],['🙂','Müştəri',p.served|0],['₼','Pulu',(p.money|0)+' ₼'],['🏪','Bizneslər',p.biz|0],['🔓','Açılışlar',p.unlocked|0],['💍','Toylar',p.toys|0]];
+  b.innerHTML='<button class="plBack">‹ Siyahıya qayıt</button><div class="pfTop plTop"><div class="av big">'+avatarFor(p)+'</div><div class="pfId"><div class="plBig">'+escapeHTML(p.name||'Oyunçu')+'</div><div class="pfLvl">Səviyyə <b>'+(p.level|0)+'</b> · '+(i+1)+'-ci yer</div><div class="xpbar pfXp"><i style="width:'+Math.min(100,100*(p.xp||0)/need)+'%"></i></div><div class="pfXpTxt">'+escapeHTML(whenAgo(p.updatedAt))+'</div></div></div><div class="pfStats">'+rows.map(function(r){ return '<div class="pfStat"><span class="pfIc">'+r[0]+'</span><span class="pfLb">'+r[1]+'</span><b>'+r[2]+'</b></div>'; }).join('')+'</div>';
+  b.querySelector('.plBack').onclick=renderPlayerList; }
+$('plClose').addEventListener('click', function(){ closeModal('players'); });
+$('pfPlayers').addEventListener('click', openPlayers);
 window.onCloudChange=function(){ var u=cloudUser(); if(u && S.avatar===undefined && u.photoURL){ S.avatar='google'; } if(u && (!S.name || S.name==='Oyunçu') && u.displayName){ setName(u.displayName.split(' ')[0]); } renderHudProfile(); renderProfile(); };
 
 // ---------- missions ----------

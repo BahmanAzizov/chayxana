@@ -121,6 +121,15 @@ html,body{ margin:0; height:100%; overflow:hidden; background:var(--sky); color:
 .pfStat .pfIc{ font-size:15px; } .pfLb{ font-size:11px; opacity:.75; } .pfStat b{ font-size:15px; }
 .gbtn{ background:#fff; color:#3c4043; box-shadow:inset 0 0 0 1px #dadce0, 0 3px 0 rgba(0,0,0,.15); display:inline-flex; align-items:center; justify-content:center; gap:8px; }
 .gbtn .g{ font-weight:900; font-size:17px; background:conic-gradient(#ea4335 0 25%,#fbbc05 0 50%,#34a853 0 75%,#4285f4 0); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.plBtn{ width:100%; min-height:44px; margin:0 0 12px; font-size:15px; } .plBtn[hidden]{ display:none; }
+.plList{ display:flex; flex-direction:column; gap:6px; max-height:56vh; overflow:auto; margin:6px 0; }
+.plRow{ display:flex; align-items:center; gap:10px; width:100%; text-align:left; border:0; border-radius:14px; padding:8px 10px; background:rgba(127,127,127,.12); color:inherit; font:inherit; cursor:pointer; min-height:52px; }
+.plRow.me{ background:rgba(246,196,83,.22); box-shadow:inset 0 0 0 2px rgba(246,196,83,.7); }
+.plRank{ width:30px; text-align:center; font-weight:900; font-size:15px; flex:none; } .plRow .av{ width:36px; height:36px; } .plRow .av .avE{ font-size:20px; }
+.plName{ flex:1; min-width:0; display:flex; flex-direction:column; } .plName b{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .plName em{ font-style:normal; opacity:.7; font-weight:700; } .plName small{ font-size:12px; opacity:.7; }
+.plLv{ font-size:12px; white-space:nowrap; } .plLv b{ font-size:16px; color:var(--accent); }
+.plBack{ border:0; background:none; color:inherit; font:inherit; font-weight:800; padding:6px 0; margin-bottom:6px; cursor:pointer; opacity:.85; }
+.plTop{ margin-bottom:12px; } .plBig{ font-size:20px; font-weight:900; }
 .resv{ position:fixed; left:50%; transform:translateX(-50%); bottom:calc(env(safe-area-inset-bottom,0px) + 78px); width:min(360px,calc(100% - 24px)); background:#d94f7a; color:#fff; border-radius:16px; padding:10px 12px; font-weight:900; font-size:14px; line-height:1.35; display:none; box-shadow:0 4px 0 rgba(0,0,0,.25); }
 .resv .row{ margin-top:8px; }
 .resv .buy.quiet{ background:rgba(255,255,255,.22); color:#fff; }

@@ -2,6 +2,10 @@
 
 Versiya `version.js` faylındadır. Hər yeni buraxılışda oranı artır və buraya bir sətir yaz.
 
+## 1.3.0
+- Oyunçular: Google ilə girənlər səviyyəyə görə sıralanmış siyahını və hər oyunçunun profilini görür.
+- Firestore-a açıq profil (`profiles`) əlavə olundu, qaydalar yeniləndi.
+
 ## 1.2.2
 - Telefonda profil kartına toxunanda profil açılmırdı, düzəldildi.
 - Firebase qurulmayanda profildə oyunçuya aydın yazı göstərilir.

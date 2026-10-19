@@ -1,10 +1,22 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Hər oyunçu yalnız öz yaddaşını oxuyub yaza bilir
+
+    // Oyunçunun bütün irəliləyişi: yalnız özü oxuyub yaza bilir
     match /players/{uid} {
       allow read, write: if request.auth != null && request.auth.uid == uid
                          && (request.resource == null || request.resource.data.save.size() < 500000);
+    }
+
+    // Açıq profil: Google ilə girən hər kəs görə bilir, yalnız sahibi dəyişə bilir
+    match /profiles/{uid} {
+      allow read: if request.auth != null;
+      allow delete: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['name','avatar','photo','level','xp','score','money','served','tea','biz','unlocked','toys','version','updatedAt'])
+        && request.resource.data.name is string && request.resource.data.name.size() <= 16
+        && request.resource.data.level is int && request.resource.data.level >= 1 && request.resource.data.level <= 1000
+        && request.resource.data.score is int;
     }
   }
 }

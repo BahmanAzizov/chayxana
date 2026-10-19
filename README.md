@@ -71,7 +71,11 @@ Oyunçular oyunu açanda **"Yeni versiya hazırdır — Yenilə"** yazısını g
 5. **Authentication → Settings → Authorized domains** bölməsinə `İSTİFADƏÇİ-ADI.github.io` əlavə et.
 6. `firestore.rules` məzmununu **Firestore → Rules** bölməsinə yapışdır və **Publish** bas.
 
-`firebase-config.js`-dəki açarlar gizli deyil, repoda açıq durması normaldır. Məlumatı `firestore.rules` qoruyur: hər oyunçu yalnız öz yaddaşını görür.
+`firebase-config.js`-dəki açarlar gizli deyil, repoda açıq durması normaldır. Məlumatı `firestore.rules` qoruyur:
+- `players/{uid}`: oyunçunun bütün irəliləyişi. Yalnız özü oxuyub yaza bilir.
+- `profiles/{uid}`: açıq profil (ad, avatar, səviyyə, statistika; e-poçt yox). Google ilə girən hər kəs görə bilir, yalnız sahibi dəyişə bilir. **Oyunçular** siyahısı buradan gəlir.
+
+`firestore.rules` dəyişəndə onu Firebase Console → Firestore → Rules bölməsinə yenidən yapışdırıb **Publish** etmək lazımdır.
 
 `firebase-config.js` doldurulmayıbsa, oyun irəliləyişi yalnız telefonda saxlayır.
 

@@ -2335,6 +2335,10 @@ function renderProfile(){ if($('profile').style.display!=='flex') return; var u=
   grid.querySelectorAll('.pfAvOpt').forEach(function(b){ b.onclick=function(){ var i=b.getAttribute('data-i'); S.avatar = i==='google' ? 'google' : (+i); save(); renderProfile(); renderHudProfile(); SFX.pop(); }; }); }
 function escapeHTML(t){ return String(t).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
 function openProfile(){ openModal('profile'); $('pfAvGrid').hidden=true; renderProfile(); }
+$('lvl').addEventListener('click', openProfile); $('lvl').addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openProfile(); } });
+$('pfClose').addEventListener('click', function(){ closeModal('profile'); });
+$('pfAvEdit').addEventListener('click', function(){ var g=$('pfAvGrid'); g.hidden=!g.hidden; });
+$('pfName').addEventListener('change', function(){ setName(this.value); this.value=S.name; save(); });
 window.onCloudChange=function(){ var u=cloudUser(); if(u && S.avatar===undefined && u.photoURL){ S.avatar='google'; } if(u && (!S.name || S.name==='Oyunçu') && u.displayName){ setName(u.displayName.split(' ')[0]); } renderHudProfile(); renderProfile(); };
 
 // ---------- missions ----------

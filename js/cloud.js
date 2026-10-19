@@ -11,7 +11,7 @@
   function local() { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; } }
 
   var cfg = window.FIREBASE_CONFIG;
-  if (!window.firebase || !cfg || !cfg.apiKey || /^BURAYA/.test(cfg.apiKey)) { status('Bulud yaddaş qurulmayıb: firebase-config.js faylını doldur'); return; }
+  if (!window.firebase || !cfg || !cfg.apiKey || /^BURAYA/.test(cfg.apiKey)) { console.warn('Çayxana: Google girişi üçün firebase-config.js faylına Firebase layihənin ayarlarını yaz (README → Firebase).'); status('Google ilə giriş hələ aktiv deyil. İrəliləyiş bu cihazda saxlanır.'); return; }
 
   firebase.initializeApp(cfg);
   var auth = firebase.auth(), db = firebase.firestore();

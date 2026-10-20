@@ -969,11 +969,11 @@ function update(dt){
 }
 
 // ---------- save ----------
-function save(){ if(window.__cloudRestoring) return; try{ localStorage.setItem(SAVE_KEY, JSON.stringify({money:S.money, unlocked:S.unlocked, up:S.up, elapsed:S.elapsed, unlockTimes:S.unlockTimes, muted:S.muted, lost:S.lost, served:S.served, delivered:S.delivered, level:S.level, xp:S.xp, zoom:S.zoom, name:S.name, st:S.st, mis:S.mis, tod:S.tod, biz:S.biz, snd2:S.snd2, vol:S.vol, avatar:S.avatar, nameSet:S.nameSet, savedAt:Date.now()})); }catch(e){} if(window.cloudOnSave) window.cloudOnSave(); }
+function save(){ if(window.__cloudRestoring) return; try{ localStorage.setItem(SAVE_KEY, JSON.stringify({money:S.money, unlocked:S.unlocked, up:S.up, elapsed:S.elapsed, unlockTimes:S.unlockTimes, muted:S.muted, lost:S.lost, served:S.served, delivered:S.delivered, level:S.level, xp:S.xp, zoom:S.zoom, name:S.name, st:S.st, mis:S.mis, tod:S.tod, biz:S.biz, snd2:S.snd2, vol:S.vol, avatar:S.avatar, nameSet:S.nameSet, pile:(pile?Math.floor(pile.amount):0), world:(S.started?snapshotWorld():S.world||null), savedAt:Date.now()})); }catch(e){} if(window.cloudOnSave) window.cloudOnSave(); }
 window.gameSave=save;
 function load(){ try{ var d=JSON.parse(localStorage.getItem(SAVE_KEY)||'null'); if(d){ S.money=+d.money||0; S.unlocked=Math.min(d.unlocked|0, CFG.unlocks.length); if(d.up){ Object.keys(S.up).forEach(function(k){ S.up[k]=Math.min((d.up[k]|0), CFG.ups[k].prices.length); }); } S.elapsed=+d.elapsed||0; S.unlockTimes=d.unlockTimes||[]; S.muted=!!d.muted; S.lost=d.lost|0; S.served=d.served|0; S.delivered=d.delivered|0;
     if(d.xp===undefined){ var xp=(d.served|0)*2+(d.unlocked|0)*5, L=1; while(xp>=xpNeed(L)){ xp-=xpNeed(L); L++; } S.level=L; S.xp=xp; } else { S.level=Math.max(1,d.level|0); S.xp=+d.xp||0; }
-    S.zoom=+d.zoom||1; if(typeof d.name==='string') S.name=d.name.slice(0,16); S.nameSet = d.nameSet!==undefined ? !!d.nameSet : !!(S.name && S.name!=='Bahman' && S.name!=='Oyunçu'); if(!S.nameSet && (S.name==='Bahman'||S.name==='Oyunçu')) S.name=''; if(d.st && typeof d.st==='object') S.st=d.st; if(d.mis && d.mis.active) S.mis=d.mis; if(d.tod!==undefined) S.tod=+d.tod; if(d.biz) S.biz=d.biz; if(d.snd2) S.snd2=d.snd2; if(d.avatar!==undefined) S.avatar=d.avatar; if(d.vol!==undefined) S.vol=+d.vol; } }catch(e){} }
+    S.zoom=+d.zoom||1; if(typeof d.name==='string') S.name=d.name.slice(0,16); S.nameSet = d.nameSet!==undefined ? !!d.nameSet : !!(S.name && S.name!=='Bahman' && S.name!=='Oyunçu'); if(!S.nameSet && (S.name==='Bahman'||S.name==='Oyunçu')) S.name=''; if(d.st && typeof d.st==='object') S.st=d.st; if(d.mis && d.mis.active) S.mis=d.mis; if(d.tod!==undefined) S.tod=+d.tod; if(d.biz) S.biz=d.biz; if(d.snd2) S.snd2=d.snd2; S.pileSaved=+d.pile||0; S.world=d.world||null; if(d.avatar!==undefined) S.avatar=d.avatar; if(d.vol!==undefined) S.vol=+d.vol; } }catch(e){} }
 
 // ---------- ui ----------
 $('mute').addEventListener('click', function(){ S.muted=!S.muted; $('mute').textContent=S.muted?'🔇':'🔊'; save(); });
@@ -2370,6 +2370,29 @@ $('plClose').addEventListener('click', function(){ closeModal('players'); });
 $('pfPlayers').addEventListener('click', openPlayers);
 window.onCloudChange=function(){ var u=cloudUser(); if(u && S.avatar===undefined && u.photoURL){ S.avatar='google'; } var gn=googleFirstName(); if(u && gn && !S.nameSet && S.name!==gn){ setName(gn); var inp=$('pname'); if(inp && !S.started) inp.value=gn; save(); } renderHudProfile(); renderProfile(); };
 
+// ---------- keep the world as it was: seated guests and the cash box survive reloads and updates ----------
+function needLeft(c,keys){ var o={}, any=false; keys.forEach(function(k){ var r=(c.need[k]||0)-(c.got[k]||0); if(r>0){ o[k]=r; any=true; } }); return any?o:null; }
+function snapshotWorld(){ var cs=[], vs={};
+  customers.forEach(function(c){ if(!c.seated || !c.seat || (c.state!=='sit' && c.state!=='drink') || c.toyRes) return; var ti=tables.indexOf(c.seat.t), si=c.seat.t.seats.indexOf(c.seat); if(ti<0||si<0) return;
+    cs.push([ti,si,c.type, c.state==='sit'?needLeft(c,CAY_TYPES):null, Math.round(100*c.patience/Math.max(1,c.maxP))/100, c.afterTea?1:0]); });
+  VEN_LIST.forEach(function(v){ if(v.def.eventOnly) return; var arr=[]; v.customers.forEach(function(c){ if(!c.seated || !c.seat || (c.state!=='sit' && c.state!=='drink') || c.toyRes) return; var ti=v.tables.indexOf(c.seat.t), si=c.seat.t.seats.indexOf(c.seat); if(ti<0||si<0) return;
+    arr.push([ti,si, c.state==='sit'?needLeft(c,Object.keys(c.need)):null, Math.round(100*c.patience/Math.max(1,c.maxP))/100]); }); if(arr.length) vs[v.b.id]=arr; });
+  return {c:cs, v:vs}; }
+function restoreWorld(w){ if(!w) return; var n=0;
+  (w.c||[]).forEach(function(e){ var t=tables[e[0]], seat=t && t.seats[e[1]]; if(!seat || seat.c) return; var c=spawnCustomer(e[2]||'normal', seat); if(!c || c.seat!==seat) return;
+    sitDown(c); if(e[5]){ c.afterTea=true; c.toyT=seat.t; }
+    if(!c.nerd){ CAY_TYPES.forEach(function(k){ c.need[k]=(e[3]&&e[3][k])||0; c.got[k]=0; c.claimed[k]=0; }); if(!e[3]){ c.state='drink'; c.drinkT=CFG.drinkTime; } }
+    c.patience=c.maxP*Math.max(0.4,Math.min(1,e[4]||1)); n++; });
+  Object.keys(w.v||{}).forEach(function(id){ var v=VEN[id]; if(!v) return; w.v[id].forEach(function(e){ var t=v.tables[e[0]], seat=t && t.seats[e[1]]; if(!seat || seat.c) return;
+    var g=takeChar(), sp=v.def.spawns[0]; g.position.set(seat.x,0,seat.z);
+    var c={grp:g, pos:g.position, v:v, type:'normal', seat:seat, need:{}, got:{}, claimed:{}, pay:0, glasses:[], state:'toSeat', patience:35, maxP:35, drinkT:0, t:Math.random()*10, happy:0, angry:0, moving:false, seated:false, html:'', path:[], dest:null, exit:sp===v.def.spawns[0]?v.def.spawns[1]:v.def.spawns[0], hold:0};
+    seat.c=c; c.el=lbl('bubble',''); c.el.style.display='none'; c.L=addLabel(c.el,null,function(vv){ return vv.set(c.pos.x, c.pos.y+(c.seated?1.9:2.3), c.pos.z); }); c.L.bub=true; v.customers.push(c);
+    c.pos.set(seat.x,0,seat.z); c.grp.rotation.y=seat.rot; c.seated=true; vOrder(c);
+    if(e[2]){ c.need={}; c.got={}; c.claimed={}; Object.keys(e[2]).forEach(function(k){ c.need[k]=e[2][k]; c.got[k]=0; c.claimed[k]=0; }); } else { c.state='drink'; c.drinkT=7; }
+    c.patience=c.maxP*Math.max(0.4,Math.min(1,e[3]||1)); n++; }); });
+  return n; }
+setInterval(function(){ if(S.started && !paused) save(); }, 15000);
+
 // ---------- missions ----------
 var MDEFS=[
   {k:'tea',     n:5,   txt:'{n} stəkan çay payla',                          m:30,  xp:6},
@@ -2451,7 +2474,7 @@ if(S.unlocked>0) S.tut=TUT.length;
 if(S.elapsed>=S.offerAt) S.offerAt=S.elapsed+60;
 while(S.toyNext<=S.elapsed) S.toyNext+=180;
 $('mute').textContent=S.muted?'🔇':'🔊';
-setZoom(S.zoom||1); updateLevelHud(); $('pname').value=S.name; setName(S.name||'Oyunçu'); updateCrowd(0); initMissions(); initBiz(); band.loading=true; updateBand(0.01); band.loading=false; for(var ew=0;ew<S.up.waiters;ew++) extraWaiter(ew,true); updateDayNight(0);
+setZoom(S.zoom||1); updateLevelHud(); $('pname').value=S.name; setName(S.name||'Oyunçu'); updateCrowd(0); initMissions(); initBiz(); if(pile && S.pileSaved){ pile.amount=Math.min(CFG.pileCap,S.pileSaved); updatePileMeshes(); } try{ restoreWorld(S.world); }catch(e){ console.warn('restoreWorld',e); } band.loading=true; updateBand(0.01); band.loading=false; for(var ew=0;ew<S.up.waiters;ew++) extraWaiter(ew,true); updateDayNight(0);
 camTarget.set(player.pos.x, 0, player.pos.z);
 var last=performance.now();
 var dtS=1/60;

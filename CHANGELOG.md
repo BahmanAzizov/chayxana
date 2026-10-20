@@ -2,6 +2,11 @@
 
 Versiya `version.js` faylındadır. Hər yeni buraxılışda oranı artır və buraya bir sətir yaz.
 
+## 1.4.2
+- Oyundan çıxıb girəndə və yeni versiyadan sonra masalarda oturan müştərilər öz sifarişləri ilə yerində qalır (çayxana, restoran, pub, coffee shop).
+- Çayxana kassasındakı yığılmamış pul da yadda saxlanır.
+- Oyun hər 15 saniyədən bir özü yadda saxlayır.
+
 ## 1.4.1
 - Yeni oyunçulara "Bahman" adı göstərilmir: ad boş gəlir, Google ilə girəndə oyunçunun öz adı avtomatik yazılır.
 - Oyunçu adını özü yazıbsa, Google adı onu dəyişmir.

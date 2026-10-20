@@ -74,7 +74,7 @@ var ENDS = [[9.4,-7.5],[9.4,17.5]];
 var WAIT_SLOTS = [[6.4,4.6],[7.5,4.6],[8.9,4.6],[9.6,5.8]];
 
 var S = { money:0, unlocked:0, up:{padnos:0,speed:0,samovar:0,price:0,patience:0,waiters:0,vspeed:0}, elapsed:0, session:0, unlockTimes:[], muted:false,
-  level:1, xp:0, zoom:1, name:'Bahman', st:{}, mis:null, timeScale:1, zen:false, showFps:false, tod:0.35, biz:null, snd2:null, vol:0.8, boostUntil:0, offerAt:330, offerShown:false, tut:0, started:false, toyNext:360, nextSpawn:2, patienceMul:1, lost:0, served:0, delivered:0 };
+  level:1, xp:0, zoom:1, name:'', nameSet:false, st:{}, mis:null, timeScale:1, zen:false, showFps:false, tod:0.35, biz:null, snd2:null, vol:0.8, boostUntil:0, offerAt:330, offerShown:false, tut:0, started:false, toyNext:360, nextSpawn:2, patienceMul:1, lost:0, served:0, delivered:0 };
 var paused = false;
 
 // ---------- three setup ----------
@@ -969,11 +969,11 @@ function update(dt){
 }
 
 // ---------- save ----------
-function save(){ if(window.__cloudRestoring) return; try{ localStorage.setItem(SAVE_KEY, JSON.stringify({money:S.money, unlocked:S.unlocked, up:S.up, elapsed:S.elapsed, unlockTimes:S.unlockTimes, muted:S.muted, lost:S.lost, served:S.served, delivered:S.delivered, level:S.level, xp:S.xp, zoom:S.zoom, name:S.name, st:S.st, mis:S.mis, tod:S.tod, biz:S.biz, snd2:S.snd2, vol:S.vol, avatar:S.avatar, savedAt:Date.now()})); }catch(e){} if(window.cloudOnSave) window.cloudOnSave(); }
+function save(){ if(window.__cloudRestoring) return; try{ localStorage.setItem(SAVE_KEY, JSON.stringify({money:S.money, unlocked:S.unlocked, up:S.up, elapsed:S.elapsed, unlockTimes:S.unlockTimes, muted:S.muted, lost:S.lost, served:S.served, delivered:S.delivered, level:S.level, xp:S.xp, zoom:S.zoom, name:S.name, st:S.st, mis:S.mis, tod:S.tod, biz:S.biz, snd2:S.snd2, vol:S.vol, avatar:S.avatar, nameSet:S.nameSet, savedAt:Date.now()})); }catch(e){} if(window.cloudOnSave) window.cloudOnSave(); }
 window.gameSave=save;
 function load(){ try{ var d=JSON.parse(localStorage.getItem(SAVE_KEY)||'null'); if(d){ S.money=+d.money||0; S.unlocked=Math.min(d.unlocked|0, CFG.unlocks.length); if(d.up){ Object.keys(S.up).forEach(function(k){ S.up[k]=Math.min((d.up[k]|0), CFG.ups[k].prices.length); }); } S.elapsed=+d.elapsed||0; S.unlockTimes=d.unlockTimes||[]; S.muted=!!d.muted; S.lost=d.lost|0; S.served=d.served|0; S.delivered=d.delivered|0;
     if(d.xp===undefined){ var xp=(d.served|0)*2+(d.unlocked|0)*5, L=1; while(xp>=xpNeed(L)){ xp-=xpNeed(L); L++; } S.level=L; S.xp=xp; } else { S.level=Math.max(1,d.level|0); S.xp=+d.xp||0; }
-    S.zoom=+d.zoom||1; if(typeof d.name==='string') S.name=d.name.slice(0,16); if(d.st && typeof d.st==='object') S.st=d.st; if(d.mis && d.mis.active) S.mis=d.mis; if(d.tod!==undefined) S.tod=+d.tod; if(d.biz) S.biz=d.biz; if(d.snd2) S.snd2=d.snd2; if(d.avatar!==undefined) S.avatar=d.avatar; if(d.vol!==undefined) S.vol=+d.vol; } }catch(e){} }
+    S.zoom=+d.zoom||1; if(typeof d.name==='string') S.name=d.name.slice(0,16); S.nameSet = d.nameSet!==undefined ? !!d.nameSet : !!(S.name && S.name!=='Bahman' && S.name!=='Oyunçu'); if(!S.nameSet && (S.name==='Bahman'||S.name==='Oyunçu')) S.name=''; if(d.st && typeof d.st==='object') S.st=d.st; if(d.mis && d.mis.active) S.mis=d.mis; if(d.tod!==undefined) S.tod=+d.tod; if(d.biz) S.biz=d.biz; if(d.snd2) S.snd2=d.snd2; if(d.avatar!==undefined) S.avatar=d.avatar; if(d.vol!==undefined) S.vol=+d.vol; } }catch(e){} }
 
 // ---------- ui ----------
 $('mute').addEventListener('click', function(){ S.muted=!S.muted; $('mute').textContent=S.muted?'🔇':'🔊'; save(); });
@@ -995,7 +995,8 @@ document.addEventListener('visibilitychange', function(){ if(document.visibility
 window.addEventListener('pagehide', save);
 var nameEl=lbl('pname',''); addLabel(nameEl,null,function(v){ return v.set(player.pos.x, player.pos.y+2.22, player.pos.z); });
 function setName(n){ n=(n||'').trim().slice(0,16); S.name = n || 'Oyunçu'; nameEl.textContent=S.name; if(typeof renderHudProfile==='function') renderHudProfile(); }
-function startGame(){ audio(); setName($('pname').value); save(); $('start').style.display='none'; S.started=true; last=performance.now(); }
+function googleFirstName(){ var u=window.CLOUD && window.CLOUD.user; return u && u.displayName ? u.displayName.trim().split(/\s+/)[0].slice(0,16) : ''; }
+function startGame(){ audio(); var typed=$('pname').value.trim(); if(typed && typed!==googleFirstName()) S.nameSet=true; setName(typed || googleFirstName() || 'Oyunçu'); save(); $('start').style.display='none'; S.started=true; last=performance.now(); }
 $('play').addEventListener('click', startGame);
 $('pname').addEventListener('keydown', function(e){ if(e.key==='Enter') startGame(); });
 
@@ -2339,7 +2340,7 @@ function openProfile(){ openModal('profile'); $('pfAvGrid').hidden=true; renderP
 $('lvl').addEventListener('click', openProfile); $('lvl').addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openProfile(); } });
 $('pfClose').addEventListener('click', function(){ closeModal('profile'); });
 $('pfAvEdit').addEventListener('click', function(){ var g=$('pfAvGrid'); g.hidden=!g.hidden; });
-$('pfName').addEventListener('change', function(){ setName(this.value); this.value=S.name; save(); });
+$('pfName').addEventListener('change', function(){ if(this.value.trim()) S.nameSet=true; setName(this.value); this.value=S.name; save(); });
 // ---------- see other players: ranking and public profiles (needs Google sign-in) ----------
 var plCache=null;
 function avatarFor(p){ if(p.avatar==='google' && p.photo) return '<img src="'+escapeHTML(p.photo)+'" alt="" referrerpolicy="no-referrer">'; var a=AVATARS[(p.avatar|0)%AVATARS.length]; return '<span class="avE" style="background:'+a[1]+'">'+a[0]+'</span>'; }
@@ -2367,7 +2368,7 @@ function openBackups(){ var C=window.CLOUD, b=$('plBody'); closeModal('profile')
     b.querySelectorAll('.plRow').forEach(function(r){ r.onclick=function(){ var x=list[+r.getAttribute('data-i')]; if(confirm('Səviyyə '+x.level+' ('+fmtWhen(x.t)+') bərpa olunsun? İndiki irəliləyiş ehtiyata düşəcək.')){ save(); C.restoreBackup(x); } }; }); }); }
 $('plClose').addEventListener('click', function(){ closeModal('players'); });
 $('pfPlayers').addEventListener('click', openPlayers);
-window.onCloudChange=function(){ var u=cloudUser(); if(u && S.avatar===undefined && u.photoURL){ S.avatar='google'; } if(u && (!S.name || S.name==='Oyunçu') && u.displayName){ setName(u.displayName.split(' ')[0]); } renderHudProfile(); renderProfile(); };
+window.onCloudChange=function(){ var u=cloudUser(); if(u && S.avatar===undefined && u.photoURL){ S.avatar='google'; } var gn=googleFirstName(); if(u && gn && !S.nameSet && S.name!==gn){ setName(gn); var inp=$('pname'); if(inp && !S.started) inp.value=gn; save(); } renderHudProfile(); renderProfile(); };
 
 // ---------- missions ----------
 var MDEFS=[
@@ -2450,7 +2451,7 @@ if(S.unlocked>0) S.tut=TUT.length;
 if(S.elapsed>=S.offerAt) S.offerAt=S.elapsed+60;
 while(S.toyNext<=S.elapsed) S.toyNext+=180;
 $('mute').textContent=S.muted?'🔇':'🔊';
-setZoom(S.zoom||1); updateLevelHud(); $('pname').value=S.name; setName(S.name); updateCrowd(0); initMissions(); initBiz(); band.loading=true; updateBand(0.01); band.loading=false; for(var ew=0;ew<S.up.waiters;ew++) extraWaiter(ew,true); updateDayNight(0);
+setZoom(S.zoom||1); updateLevelHud(); $('pname').value=S.name; setName(S.name||'Oyunçu'); updateCrowd(0); initMissions(); initBiz(); band.loading=true; updateBand(0.01); band.loading=false; for(var ew=0;ew<S.up.waiters;ew++) extraWaiter(ew,true); updateDayNight(0);
 camTarget.set(player.pos.x, 0, player.pos.z);
 var last=performance.now();
 var dtS=1/60;

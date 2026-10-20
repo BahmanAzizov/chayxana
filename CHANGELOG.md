@@ -2,6 +2,10 @@
 
 Versiya `version.js` faylındadır. Hər yeni buraxılışda oranı artır və buraya bir sətir yaz.
 
+## 1.4.1
+- Yeni oyunçulara "Bahman" adı göstərilmir: ad boş gəlir, Google ilə girəndə oyunçunun öz adı avtomatik yazılır.
+- Oyunçu adını özü yazıbsa, Google adı onu dəyişmir.
+
 ## 1.4.0
 - Bulud sinxronizasiyası artıq vaxta görə yox, irəliləyişin həcminə görə qərar verir: az irəliləyiş heç vaxt avtomatik olaraq çox irəliləyişin üstünə yazılmır.
 - Yeni cihazda Google ilə girəndə buluddakı irəliləyiş avtomatik yüklənir.

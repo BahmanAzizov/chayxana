@@ -2,6 +2,9 @@
 
 Versiya `version.js` faylındadır. Hər yeni buraxılışda oranı artır və buraya bir sətir yaz.
 
+## 1.4.3
+- Qayıdan oyunçuya başlanğıcda ad xanası və izah yox, qısa "Xoş gəldin" kartı göstərilir: avatar, ad, səviyyə, pul və "Davam et". Ad profildə dəyişdirilir.
+
 ## 1.4.2
 - Oyundan çıxıb girəndə və yeni versiyadan sonra masalarda oturan müştərilər öz sifarişləri ilə yerində qalır (çayxana, restoran, pub, coffee shop).
 - Çayxana kassasındakı yığılmamış pul da yadda saxlanır.

@@ -973,7 +973,7 @@ function save(){ if(window.__cloudRestoring) return; try{ localStorage.setItem(S
 window.gameSave=save;
 function load(){ try{ var d=JSON.parse(localStorage.getItem(SAVE_KEY)||'null'); if(d){ S.money=+d.money||0; S.unlocked=Math.min(d.unlocked|0, CFG.unlocks.length); if(d.up){ Object.keys(S.up).forEach(function(k){ S.up[k]=Math.min((d.up[k]|0), CFG.ups[k].prices.length); }); } S.elapsed=+d.elapsed||0; S.unlockTimes=d.unlockTimes||[]; S.muted=!!d.muted; S.lost=d.lost|0; S.served=d.served|0; S.delivered=d.delivered|0;
     if(d.xp===undefined){ var xp=(d.served|0)*2+(d.unlocked|0)*5, L=1; while(xp>=xpNeed(L)){ xp-=xpNeed(L); L++; } S.level=L; S.xp=xp; } else { S.level=Math.max(1,d.level|0); S.xp=+d.xp||0; }
-    S.zoom=+d.zoom||1; if(typeof d.name==='string') S.name=d.name.slice(0,16); S.nameSet = d.nameSet!==undefined ? !!d.nameSet : !!(S.name && S.name!=='Bahman' && S.name!=='Oyunçu'); if(!S.nameSet && (S.name==='Bahman'||S.name==='Oyunçu')) S.name=''; if(d.st && typeof d.st==='object') S.st=d.st; if(d.mis && d.mis.active) S.mis=d.mis; if(d.tod!==undefined) S.tod=+d.tod; if(d.biz) S.biz=d.biz; if(d.snd2) S.snd2=d.snd2; S.pileSaved=+d.pile||0; S.world=d.world||null; if(d.avatar!==undefined) S.avatar=d.avatar; if(d.vol!==undefined) S.vol=+d.vol; } }catch(e){} }
+    S.zoom=+d.zoom||1; if(typeof d.name==='string') S.name=d.name.slice(0,16); S.nameSet = d.nameSet!==undefined ? !!d.nameSet : !!(S.name && S.name!=='Bahman' && S.name!=='Oyunçu'); if(!S.nameSet && (S.name==='Bahman'||S.name==='Oyunçu')) S.name=''; if(d.st && typeof d.st==='object') S.st=d.st; if(d.mis && d.mis.active) S.mis=d.mis; if(d.tod!==undefined) S.tod=+d.tod; if(d.biz) S.biz=d.biz; if(d.snd2) S.snd2=d.snd2; S.returning=!!((d.level|0)>1 || (d.elapsed||0)>120 || d.nameSet || (d.unlocked|0)>1); S.pileSaved=+d.pile||0; S.world=d.world||null; if(d.avatar!==undefined) S.avatar=d.avatar; if(d.vol!==undefined) S.vol=+d.vol; } }catch(e){} }
 
 // ---------- ui ----------
 $('mute').addEventListener('click', function(){ S.muted=!S.muted; $('mute').textContent=S.muted?'🔇':'🔊'; save(); });
@@ -996,7 +996,8 @@ window.addEventListener('pagehide', save);
 var nameEl=lbl('pname',''); addLabel(nameEl,null,function(v){ return v.set(player.pos.x, player.pos.y+2.22, player.pos.z); });
 function setName(n){ n=(n||'').trim().slice(0,16); S.name = n || 'Oyunçu'; nameEl.textContent=S.name; if(typeof renderHudProfile==='function') renderHudProfile(); }
 function googleFirstName(){ var u=window.CLOUD && window.CLOUD.user; return u && u.displayName ? u.displayName.trim().split(/\s+/)[0].slice(0,16) : ''; }
-function startGame(){ audio(); var typed=$('pname').value.trim(); if(typed && typed!==googleFirstName()) S.nameSet=true; setName(typed || googleFirstName() || 'Oyunçu'); save(); $('start').style.display='none'; S.started=true; last=performance.now(); }
+function renderWelcome(){ var card=$('startCard'); if(!card) return; card.classList.toggle('returning', !!S.returning); if(!S.returning) return; $('wAv').innerHTML=avatarHTML(); $('wHi').textContent='Xoş gəldin, '+(S.name||'Oyunçu')+'!'; $('wStat').textContent='Səviyyə '+S.level+' · '+Math.floor(S.money)+' ₼'; $('play').textContent='Davam et'; }
+function startGame(){ audio(); if(!S.returning){ var typed=$('pname').value.trim(); if(typed && typed!==googleFirstName()) S.nameSet=true; setName(typed || googleFirstName() || 'Oyunçu'); } S.returning=true; save(); $('start').style.display='none'; S.started=true; last=performance.now(); }
 $('play').addEventListener('click', startGame);
 $('pname').addEventListener('keydown', function(e){ if(e.key==='Enter') startGame(); });
 
@@ -2368,7 +2369,7 @@ function openBackups(){ var C=window.CLOUD, b=$('plBody'); closeModal('profile')
     b.querySelectorAll('.plRow').forEach(function(r){ r.onclick=function(){ var x=list[+r.getAttribute('data-i')]; if(confirm('Səviyyə '+x.level+' ('+fmtWhen(x.t)+') bərpa olunsun? İndiki irəliləyiş ehtiyata düşəcək.')){ save(); C.restoreBackup(x); } }; }); }); }
 $('plClose').addEventListener('click', function(){ closeModal('players'); });
 $('pfPlayers').addEventListener('click', openPlayers);
-window.onCloudChange=function(){ var u=cloudUser(); if(u && S.avatar===undefined && u.photoURL){ S.avatar='google'; } var gn=googleFirstName(); if(u && gn && !S.nameSet && S.name!==gn){ setName(gn); var inp=$('pname'); if(inp && !S.started) inp.value=gn; save(); } renderHudProfile(); renderProfile(); };
+window.onCloudChange=function(){ var u=cloudUser(); if(u && S.avatar===undefined && u.photoURL){ S.avatar='google'; } var gn=googleFirstName(); if(u && gn && !S.nameSet && S.name!==gn){ setName(gn); var inp=$('pname'); if(inp && !S.started) inp.value=gn; save(); } renderHudProfile(); renderProfile(); if(!S.started) renderWelcome(); };
 
 // ---------- keep the world as it was: seated guests and the cash box survive reloads and updates ----------
 function needLeft(c,keys){ var o={}, any=false; keys.forEach(function(k){ var r=(c.need[k]||0)-(c.got[k]||0); if(r>0){ o[k]=r; any=true; } }); return any?o:null; }
@@ -2474,7 +2475,7 @@ if(S.unlocked>0) S.tut=TUT.length;
 if(S.elapsed>=S.offerAt) S.offerAt=S.elapsed+60;
 while(S.toyNext<=S.elapsed) S.toyNext+=180;
 $('mute').textContent=S.muted?'🔇':'🔊';
-setZoom(S.zoom||1); updateLevelHud(); $('pname').value=S.name; setName(S.name||'Oyunçu'); updateCrowd(0); initMissions(); initBiz(); if(pile && S.pileSaved){ pile.amount=Math.min(CFG.pileCap,S.pileSaved); updatePileMeshes(); } try{ restoreWorld(S.world); }catch(e){ console.warn('restoreWorld',e); } band.loading=true; updateBand(0.01); band.loading=false; for(var ew=0;ew<S.up.waiters;ew++) extraWaiter(ew,true); updateDayNight(0);
+setZoom(S.zoom||1); updateLevelHud(); $('pname').value=S.name; setName(S.name||'Oyunçu'); renderWelcome(); updateCrowd(0); initMissions(); initBiz(); if(pile && S.pileSaved){ pile.amount=Math.min(CFG.pileCap,S.pileSaved); updatePileMeshes(); } try{ restoreWorld(S.world); }catch(e){ console.warn('restoreWorld',e); } band.loading=true; updateBand(0.01); band.loading=false; for(var ew=0;ew<S.up.waiters;ew++) extraWaiter(ew,true); updateDayNight(0);
 camTarget.set(player.pos.x, 0, player.pos.z);
 var last=performance.now();
 var dtS=1/60;

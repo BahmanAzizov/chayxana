@@ -175,6 +175,11 @@ html,body{ margin:0; height:100%; overflow:hidden; background:var(--sky); color:
 #start h1{ margin:0 0 6px; font-size:32px; }
 #start p{ margin:0 0 16px; font-size:15px; line-height:1.45; }
 #start .buy{ font-size:18px; padding:12px 28px; }
+#startCard.returning .intro, #startCard.returning .namef, #startCard.returning #pname{ display:none; }
+#startCard .welcome{ display:none; }
+#startCard.returning .welcome{ display:flex; flex-direction:column; align-items:center; gap:4px; margin:6px 0 16px; }
+#startCard.returning h1{ font-size:22px; opacity:.75; margin-bottom:10px; }
+.wHi{ font-size:22px; font-weight:900; margin-top:8px; } .wStat{ font-size:15px; opacity:.8; }
 .namef{ display:block; text-align:left; font-size:13px; font-weight:900; margin:0 0 4px 4px; opacity:.8; }
 #pname{ display:block; width:100%; box-sizing:border-box; font:inherit; font-weight:900; font-size:17px; padding:10px 14px; border-radius:12px; border:2px solid rgba(34,48,60,.25); background:#fff; color:#22303c; margin:0 0 14px; -webkit-user-select:text; user-select:text; }
 #pname:focus{ outline:none; border-color:var(--accent); }

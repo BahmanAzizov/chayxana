@@ -2,6 +2,16 @@
 
 Versiya `version.js` faylındadır. Hər yeni buraxılışda oranı artır və buraya bir sətir yaz.
 
+## 1.7.3
+- Tapşırıqlar bütün şəhərə aid oldu: restoran, pub, coffee shop, şadlıq evi, supermarket, avtoyuma, paltar dükanı, Luna park, GYM, hotel, köşklər və gül dükanı üçün tapşırıqlar; eyni vaxtda 2-yə qədər şəhər tapşırığı + çayxana tapşırığı. Hər tapşırığın öz ikonu var.
+
+## 1.7.2
+- "Bizneslərim": adam sayğacına toxunanda bütün bizneslərdə neçə adam olduğu, doluluq və növbə görünür; birinə toxunanda kamera ora baxır.
+
+## 1.7.1
+- Paltar dükanının qabağını kəsən hündür şüşə bina şimala köçdü; yerində kiçik "Gül dükanı" (yeni biznes, səviyyə 8).
+- Axşamlar binaların pəncərələri təsadüfi yanır (hamısı yox, bəziləri); şüşə və dairəvi qüllələr də işıqlanır.
+
 ## 1.7.0
 - Şəhər genişləndi: ətrafında trafikli halqa yol, bütün yollarda küçə lampaları, daha çox ağac, müxtəlif formalı binalar (pilləli, L-şəkilli, şüşə qüllə, günbəzli dairəvi qüllə).
 - Hotel restoranın görüntüsünü bağlamasın deyə şimal-şərq küncə köçdü, alçaldıldı və öz parkovkası var.

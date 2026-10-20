@@ -29,7 +29,7 @@
 <div id="hud">
   <div id="money" class="pill"><span class="coin"></span><span id="moneyv">0</span></div>
   <div id="lvl" class="pill" role="button" tabindex="0" aria-label="Profil"><span id="hudAv" class="av"></span><span class="lvtxt"><b id="hudName">Oyunçu</b><span class="lvrow">Səv. <b id="lvlv">1</b><span class="xpbar"><i id="xpfill"></i></span></span></span></div>
-  <div id="crowd" class="pill" aria-label="Buradakı müştərilər"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="7" r="3.2"/><path d="M2.5 19c0-3.6 2.9-6.2 6.5-6.2s6.5 2.6 6.5 6.2z"/><circle cx="17" cy="8" r="2.6"/><path d="M15.2 13.1c3.4-.6 6.3 1.9 6.3 5.9h-4.4c0-2.3-.7-4.3-1.9-5.9z"/></svg><span><span id="crowdName">Çayxana</span> <b id="crowdv">0</b>/<span id="seatv">0</span></span><span id="waitv"></span></div>
+  <div id="crowd" class="pill" role="button" tabindex="0" aria-label="Bizneslərdəki adamlar"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="7" r="3.2"/><path d="M2.5 19c0-3.6 2.9-6.2 6.5-6.2s6.5 2.6 6.5 6.2z"/><circle cx="17" cy="8" r="2.6"/><path d="M15.2 13.1c3.4-.6 6.3 1.9 6.3 5.9h-4.4c0-2.3-.7-4.3-1.9-5.9z"/></svg><span><span id="crowdName">Çayxana</span> <b id="crowdv">0</b>/<span id="seatv">0</span></span><span id="waitv"></span><span class="chev" aria-hidden="true">›</span></div>
   <button id="misBtn" class="pill" aria-label="Tapşırıqlar"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4.5h6M8.5 10l1.6 1.6 3-3M8.5 16h7"/></svg><span>Tapşırıqlar</span><b id="misBadge" class="badge">0</b></button>
   <div id="fps"></div>
   <div id="boost">x2 gəlir · <span id="boostv">60</span> s</div>
@@ -50,6 +50,7 @@
   <div id="pfStats" class="pfStats"></div>
   <div class="row"><button class="buy" id="pfClose">Bağla</button></div></div></div>
 <div id="players" class="modal" role="dialog" aria-modal="true" aria-label="Oyunçular"><div class="card pfCard"><h2>🏆 Oyunçular</h2><div id="plBody"></div><div class="row"><button class="buy" id="plClose">Bağla</button></div></div></div>
+<div id="crowdList" class="modal" role="dialog" aria-modal="true" aria-label="Bizneslərim"><div class="card pfCard"><h2>👥 Bizneslərim</h2><div id="clTotal" class="clTotal"></div><div id="clBody" class="plList"></div><p class="clHint">Bizneslərdən birinə toxun, kamera ora baxsın</p><div class="row"><button class="buy" id="clClose">Bağla</button></div></div></div>
 <div id="stats"><div class="card"><h2>Statistika</h2><p class="ver">Versiya <b class="appVer"></b> <button class="buy quiet" id="installBtn" hidden>Telefona quraşdır</button></p><table id="stattable"></table><div class="row"><button class="buy quiet" id="close">Bağla</button><button class="buy quiet" id="sndBtn">Səs ayarları</button></div></div></div>
 <div id="mis" class="modal"><div class="card"><h2>Tapşırıqlar</h2><div id="misList"></div><div class="row"><button class="buy quiet" id="misClose">Bağla</button></div></div></div>
 <div id="buy" class="modal"><div class="card"><h2 id="buyTitle"></h2><p id="buyInfo" class="binfo"></p><div class="row"><button class="buy quiet" id="buyNo">Ləğv et</button><button class="buy" id="buyYes">Al</button></div></div></div>

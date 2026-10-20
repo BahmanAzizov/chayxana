@@ -54,6 +54,11 @@ html,body{ margin:0; height:100%; overflow:hidden; background:var(--sky); color:
 #crowd{ top:calc(env(safe-area-inset-top,0px) + 106px); left:12px; font-size:14px; padding:5px 12px 5px 10px; gap:6px; }
 #crowd b{ color:var(--accent); font-size:16px; }
 #crowd svg{ width:18px; height:18px; fill:currentColor; }
+#crowd{ pointer-events:auto; cursor:pointer; } #crowd .chev{ margin-left:2px; font-size:18px; font-weight:900; opacity:.55; line-height:1; }
+.clTotal{ display:flex; gap:10px; margin:2px 0 10px; } .clTotal div{ flex:1; padding:8px 10px; border-radius:12px; background:rgba(127,127,127,.12); } .clTotal b{ display:block; font-size:20px; color:var(--accent); } .clTotal span{ font-size:12px; opacity:.75; }
+.clIc{ width:34px; height:34px; border-radius:10px; background:rgba(127,127,127,.15); display:flex; align-items:center; justify-content:center; font-size:19px; flex:none; }
+.clBar{ display:block; height:5px; border-radius:99px; background:rgba(127,127,127,.25); margin-top:4px; overflow:hidden; } .clBar i{ display:block; height:100%; background:var(--accent); border-radius:99px; transition:width .4s; }
+.clRow .plLv{ text-align:right; } .clRow .plLv b{ display:block; } .clHint{ font-size:12px; opacity:.6; text-align:center; margin:4px 0 0; }
 .xpbar{ display:block; width:92px; height:8px; border-radius:99px; background:rgba(255,255,255,.18); overflow:hidden; }
 .xpbar i{ display:block; height:100%; width:0; background:var(--accent); border-radius:99px; transition:width .3s; }
 #zoom{ position:fixed; right:12px; top:calc(env(safe-area-inset-top,0px) + 62px); display:flex; flex-direction:column; gap:8px; }

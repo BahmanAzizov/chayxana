@@ -2,6 +2,19 @@
 
 Versiya `version.js` faylındadır. Hər yeni buraxılışda oranı artır və buraya bir sətir yaz.
 
+## 1.8.1
+- Avtoservisin girişində ilişib qalan adamlar düzəldildi.
+- Avtoservis genişləndi: 6 boks (yeni: kuzov təmiri, elektrik/akkumulyator), hər boksun önündə adı yazılıb, rəngli zolaq.
+- Gözləmə zalı: sürücülər maşından düşüb zalda gözləyir, iş bitəndə kassada ödəyib maşına qayıdırlar. Yeni əlavə: zalda kofe.
+
+## 1.8.0
+- Yeni biznes: Avtoservis (səviyyə 11, 6000 ₼). Bokslar: yağ dəyişmə (lift), təkər servisi, motor ustası, rəngləmə kamerası (maşın rəngi dəyişir). Əlavələr: diaqnostika, ehtiyat hissələri, hidravlik liftlər. Hər boksda usta, kassir, tapşırıqlar.
+- Avtoservisin qabağındakı binalar alçaldıldı ki, içi görünsün.
+
+## 1.7.4
+- Avtoyuma böyüdü: qərbdə xidmət zolağı. Köpük generatoru, tozsoranlar, quruducu və cilalama aparatı görünür və öz yerində durur (kassanın içinə girmir).
+- Hər əlavənin real təsiri var: köpük +30% qiymət, tozsoran +20% və əlavə addım, cilalama +30% və parıltı, quruducu yuma 40% tez; əlavələr müştəri axınını da artırır. Maşın başına qiymət sayğacda görünür.
+
 ## 1.7.3
 - Tapşırıqlar bütün şəhərə aid oldu: restoran, pub, coffee shop, şadlıq evi, supermarket, avtoyuma, paltar dükanı, Luna park, GYM, hotel, köşklər və gül dükanı üçün tapşırıqlar; eyni vaxtda 2-yə qədər şəhər tapşırığı + çayxana tapşırığı. Hər tapşırığın öz ikonu var.
 

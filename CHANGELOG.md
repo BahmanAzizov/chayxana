@@ -2,14 +2,14 @@
 
 Versiya `version.js` faylındadır. Hər yeni buraxılışda oranı artır və buraya bir sətir yaz.
 
-<<<<<<< HEAD
+## 1.8.3
+- version.js yüklənməsə də oyunda versiya görünür (game.js-də ehtiyat versiya).
+
 ## 1.8.2
 - Toy qonaqları gəlməyə başlayanda oyunun donması düzəldildi (iki funksiyanın adı üst-üstə düşürdü).
 - "Prototipin sonu" yazısı çıxarıldı.
 - Paltar mağazasının qabağındakı bina alçaldıldı, mağaza tam görünür.
 
-=======
->>>>>>> e4965f40d74c61c27184aec09f812677df645290
 ## 1.8.1
 - Avtoservisin girişində ilişib qalan adamlar düzəldildi.
 - Avtoservis genişləndi: 6 boks (yeni: kuzov təmiri, elektrik/akkumulyator), hər boksun önündə adı yazılıb, rəngli zolaq.

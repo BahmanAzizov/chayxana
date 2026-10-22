@@ -2,6 +2,20 @@
 
 Versiya `version.js` faylındadır. Hər yeni buraxılışda oranı artır və buraya bir sətir yaz.
 
+## 1.9.0 — yeni iqtisadiyyat
+- Bizneslər səviyyəyə görə getdikcə bahalaşır: Avtoyuma 1 500 → Pub 4 000 → … → Şadlıq evi 60 000 → Hotel 90 000 ₼.
+- Hər biznesin içində açılışlar pillə-pillə bahalaşır: ilki biznes qiymətinin ~8%-i, sonuncusu ~1,5 qatı.
+- Gəlir və axın təkmilləşdirmələrinin qiyməti biznesin qiymətinə görədir.
+- Kassir artıq pulsuz deyil: hər biznesin lövhəsində "Kassir — İşə götür" (biznes qiymətinin 15%-i). Kassir pulu özü yığır, maaşı gəlirin 10%-i. Kassir olmayanda pulu özün yığırsan. Əvvəl alınmış bizneslərdə kassir qalır.
+- Səviyyə gəliri yavaşladı: hər səviyyə +10% yox, +5%.
+
+## 1.8.5
+- Piyadalar yalnız səkilərlə gedir, yolu piyada keçidlərindən keçir; şəhərə 34 yeni piyada keçidi əlavə olundu.
+- Maşınlar qabaqdakı maşını və piyadanı görüb dayanır: maşınlar bir-birinin içinə girmir, adamlar maşının içindən keçmir. Keçiddə adam varsa, maşın gözləyir.
+
+## 1.8.4
+- Avtoservisdə "Ehtiyat hissələri" arxa divarda bütün boksların üstündə rəflər kimi görünür (rəngli qutular, təkərlər, lövhə); açılış xanası şimal girişə köçdü.
+
 ## 1.8.3
 - version.js yüklənməsə də oyunda versiya görünür (game.js-də ehtiyat versiya).
 
